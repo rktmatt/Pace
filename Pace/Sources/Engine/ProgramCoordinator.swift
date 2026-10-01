@@ -201,8 +201,9 @@ struct ProgramCoordinator {
     /// Records a finished run. `session` is nil for a free run, which stays
     /// outside the program: it never completes a planned session or feeds the
     /// weekly adaptation check.
-    func recordRun(startedAt: Date, endedAt: Date, activeDuration: TimeInterval, distanceMeters: Double, routePoints: [RoutePoint], segments: [RecordedSegment] = [], for session: PlannedSession?) -> Run {
+    func recordRun(id: UUID = UUID(), startedAt: Date, endedAt: Date, activeDuration: TimeInterval, distanceMeters: Double, routePoints: [RoutePoint], segments: [RecordedSegment] = [], for session: PlannedSession?) -> Run {
         let run = Run(
+            id: id,
             startedAt: startedAt,
             endedAt: endedAt,
             activeDuration: activeDuration,
@@ -214,6 +215,38 @@ struct ProgramCoordinator {
         )
         context.insert(run)
         session?.state = .completed
+        return run
+    }
+
+    /// Records a run finished on the Watch. Idempotent by run id, since a file
+    /// transfer can be delivered again after a relaunch. A run for a session
+    /// that has since been completed on the phone is kept as an extra free run,
+    /// so the week's minutes aren't counted twice.
+    @discardableResult
+    func recordWatchRun(_ payload: WatchRun) -> Run? {
+        let id = payload.id
+        var existing = FetchDescriptor<Run>(predicate: #Predicate { $0.id == id })
+        existing.fetchLimit = 1
+        guard (try? context.fetch(existing))?.isEmpty ?? true else { return nil }
+
+        var session: PlannedSession?
+        if let sessionID = payload.plannedSessionID {
+            var descriptor = FetchDescriptor<PlannedSession>(predicate: #Predicate { $0.id == sessionID })
+            descriptor.fetchLimit = 1
+            session = (try? context.fetch(descriptor))?.first.flatMap { $0.state == .completed ? nil : $0 }
+        }
+        let run = recordRun(
+            id: payload.id,
+            startedAt: payload.startedAt,
+            endedAt: payload.endedAt,
+            activeDuration: payload.activeDuration,
+            distanceMeters: payload.distanceMeters,
+            routePoints: payload.route.map(RoutePoint.init),
+            segments: payload.segments,
+            for: session
+        )
+        run.averageHeartRate = payload.averageHeartRate
+        run.maxHeartRate = payload.maxHeartRate
         return run
     }
 }

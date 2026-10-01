@@ -9,9 +9,13 @@
 /* Begin PBXBuildFile section */
 		049160CE104D2AED5270E3BF /* ActiveRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CC5339BD2C6E4EC7725A91 /* ActiveRunView.swift */; };
 		0518AE18005E79866DC0E3CE /* AdaptationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878613C691FCC785CACF83E7 /* AdaptationEngine.swift */; };
+		0706F78B0E9E66630C6D5CC1 /* RunSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E4F3F74593E2EBA4FA7E1C /* RunSessionController.swift */; };
 		0E1E34FB07891E72DB0394B0 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE790771675231E4E66ADF15 /* LocationTracker.swift */; };
+		0E4E4AE7E2A60CAA38127F10 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE790771675231E4E66ADF15 /* LocationTracker.swift */; };
 		14911E50F4FD990460E0770B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B88ADD3A5A8A9109753F5 /* Theme.swift */; };
 		15B85DA5FB33C73F60B85066 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCE62E8C92168951DA3A7D4 /* RootView.swift */; };
+		189BAAB7787F6DE5E501841D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 284C2DA1DDB689E5D216FF24 /* Assets.xcassets */; };
+		22E56647E94D89B823D65413 /* RunRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85662454098495C035D1698 /* RunRecording.swift */; };
 		2490EEBD6148096191F1147D /* FreeRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C3F466433E4DCA3CE4F8ED /* FreeRunView.swift */; };
 		256DB5F47000CE943BD48369 /* Couch5KProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329EA00AA8B2D4FCB5CD0DD9 /* Couch5KProgram.swift */; };
 		2A90D23B84683ACBDFF02661 /* QuickActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64FF5794146B86DAC410FF8 /* QuickActions.swift */; };
@@ -25,17 +29,35 @@
 		3BAEF4551979260FE572E556 /* RunSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E4F3F74593E2EBA4FA7E1C /* RunSessionController.swift */; };
 		3EBB8A06ACD6D28C32A80BAC /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2E85B68B2BF76A259D53FF /* HomeView.swift */; };
 		4830896CAA3B9167AE5E3865 /* AdaptationApplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AAC2EDAFF4CB13F6CB63FE /* AdaptationApplier.swift */; };
+		59F23233143B23A9EA85D50B /* WatchHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FA13A6FAE0E8ECDA671CCE /* WatchHomeView.swift */; };
 		60097594053440BEF0222240 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561B2B1803F05259611CC5B /* HistoryView.swift */; };
 		6B43D5C3DBF4A3385006AA55 /* SwipeToStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EDB2315DB3F6CC0438B118 /* SwipeToStartView.swift */; };
 		6F0859A832EA0ABC6263FD2A /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3408900EA21D86210CF9301C /* PlanView.swift */; };
+		6F8A49356AB40520FF809494 /* RunRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85662454098495C035D1698 /* RunRecording.swift */; };
+		6FF4B8CFF91C4CB3FD951A9C /* PaceWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844D96AA009BFAEDE5373A97 /* PaceWatchApp.swift */; };
+		74663F2CCFA791E80BF2C47B /* WatchSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC2D1C27C59DD076C72F1E5 /* WatchSummaryView.swift */; };
+		7A930EA85B8BFC07F3651523 /* HapticCueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B0A50E21FA0EB1419119E /* HapticCueService.swift */; };
 		832FC637351FE176E5144C8F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3081CAD56835BB5548D45331 /* Foundation.framework */; };
+		867F80DD133042C24AFE06F2 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7BECE29CAA17D73F2335D8 /* WorkoutManager.swift */; };
 		95CC544CA6F47C7B14BC7657 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3081CAD56835BB5548D45331 /* Foundation.framework */; };
+		A29BA6CC444AD282DFFAC651 /* PaceWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 69914085A7230D67D050F414 /* PaceWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AD24322B22FAD553F2F1477D /* WatchTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FD90B8BF8E2C07EFC9C37C /* WatchTheme.swift */; };
+		B015074DFE6A2BF8BC00E2BB /* WatchRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27893B4F16A72D0E16E42B5C /* WatchRunView.swift */; };
+		B13A1DEFC60C4A4B74BB0772 /* WatchSyncStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04094996109AF32982E61C16 /* WatchSyncStore.swift */; };
 		B3358DAB4E5090C75FF28395 /* RunSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D9BD02C264F419689E90BB /* RunSummaryView.swift */; };
+		B96AF2520F523230277209ED /* WatchPayloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C24EB71774ECA2CE32EA92 /* WatchPayloads.swift */; };
 		BBB9E80CC8EE4B5D3C948ECD /* ProgramCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C65545E6D352BA40E82C29 /* ProgramCoordinator.swift */; };
 		BC4921905FA37F8FD7AB1685 /* AdaptationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20289A61B961611D71AF500 /* AdaptationTests.swift */; };
+		C0ED0A35F95C265F36823057 /* PhoneWatchSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CB05C488F894BB753AC304 /* PhoneWatchSync.swift */; };
+		C496F9F9B3FCB1F49D02F56E /* ProgramDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC93C2D0EA63A79E5B9E07B /* ProgramDefinition.swift */; };
 		C5512888E94A0F6EFB10A283 /* PaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AD92B2086599C302D646BE /* PaceApp.swift */; };
+		CE119C3C609D57086BB6DF80 /* WatchPayloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C24EB71774ECA2CE32EA92 /* WatchPayloads.swift */; };
+		CF492ADAD24560B11A1F0D30 /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFD6A655D9E975D248B4BDE /* Format.swift */; };
+		D2DED203BE20D7F72AE78AD0 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4758C174A2FF91C0B64B13C /* HealthKit.framework */; };
+		F44D4F33595D26BEC285D73E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BBD220A25F67736A4787103 /* Foundation.framework */; };
 		F6997BC9A34F124907E6C954 /* PersistedModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507BE1385CBBB029904D157D /* PersistedModels.swift */; };
 		F7BEBD76B6C8902F03C35566 /* SoundCueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032EDCC6FD919BAE41790261 /* SoundCueService.swift */; };
+		FD139B94D21F3AF7D7978EF1 /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFD6A655D9E975D248B4BDE /* Format.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,43 +68,91 @@
 			remoteGlobalIDString = 7E20543B652CF5737D9918F7;
 			remoteInfo = Pace;
 		};
+		45FD1178ED3377EE15252D20 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ED7A3E252F77C0BDA55320D9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 99C159A9969D32715FE1D964;
+			remoteInfo = PaceWatch;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6DFCA2E15FFA7E4995B66946 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				A29BA6CC444AD282DFFAC651 /* PaceWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		032EDCC6FD919BAE41790261 /* SoundCueService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundCueService.swift; sourceTree = "<group>"; };
+		04094996109AF32982E61C16 /* WatchSyncStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchSyncStore.swift; sourceTree = "<group>"; };
 		09AD92B2086599C302D646BE /* PaceApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaceApp.swift; sourceTree = "<group>"; };
 		256A651DF4072E31501C3252 /* TrainingAnalyzer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrainingAnalyzer.swift; sourceTree = "<group>"; };
+		27893B4F16A72D0E16E42B5C /* WatchRunView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchRunView.swift; sourceTree = "<group>"; };
+		284C2DA1DDB689E5D216FF24 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3081CAD56835BB5548D45331 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		329EA00AA8B2D4FCB5CD0DD9 /* Couch5KProgram.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Couch5KProgram.swift; sourceTree = "<group>"; };
 		3408900EA21D86210CF9301C /* PlanView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
+		3BBD220A25F67736A4787103 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		3BCE62E8C92168951DA3A7D4 /* RootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		43C3F466433E4DCA3CE4F8ED /* FreeRunView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FreeRunView.swift; sourceTree = "<group>"; };
+		4AFD6A655D9E975D248B4BDE /* Format.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
+		4C6B0A50E21FA0EB1419119E /* HapticCueService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HapticCueService.swift; sourceTree = "<group>"; };
 		4C6B88ADD3A5A8A9109753F5 /* Theme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		507BE1385CBBB029904D157D /* PersistedModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PersistedModels.swift; sourceTree = "<group>"; };
 		5A2E85B68B2BF76A259D53FF /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		69914085A7230D67D050F414 /* PaceWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaceWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BCC0BF9CB2F6A184CBBFBE7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = Pace/Resources/Info.plist; sourceTree = "<group>"; };
 		7975EFA8CCA51C882D1EB0E7 /* RunInsights.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RunInsights.swift; sourceTree = "<group>"; };
+		7B0DDAFB8920C649D0F39652 /* PaceWatch.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = PaceWatch.entitlements; sourceTree = "<group>"; };
+		81FA13A6FAE0E8ECDA671CCE /* WatchHomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchHomeView.swift; sourceTree = "<group>"; };
 		83E4F3F74593E2EBA4FA7E1C /* RunSessionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RunSessionController.swift; sourceTree = "<group>"; };
+		844D96AA009BFAEDE5373A97 /* PaceWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaceWatchApp.swift; sourceTree = "<group>"; };
 		878613C691FCC785CACF83E7 /* AdaptationEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdaptationEngine.swift; sourceTree = "<group>"; };
+		98562EC0433758A423B9C935 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		99CB05C488F894BB753AC304 /* PhoneWatchSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhoneWatchSync.swift; sourceTree = "<group>"; };
 		9B93E7B9E65B3FDD506AD688 /* PaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4C8714356A236AFEAB34D75 /* AboutView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		A6D9BD02C264F419689E90BB /* RunSummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RunSummaryView.swift; sourceTree = "<group>"; };
 		AABFFDC992BFEEAAE7D9FBF9 /* ProgramScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProgramScheduler.swift; sourceTree = "<group>"; };
+		B4758C174A2FF91C0B64B13C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS26.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		B4CC5339BD2C6E4EC7725A91 /* ActiveRunView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActiveRunView.swift; sourceTree = "<group>"; };
 		B6AAC2EDAFF4CB13F6CB63FE /* AdaptationApplier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdaptationApplier.swift; sourceTree = "<group>"; };
 		C561B2B1803F05259611CC5B /* HistoryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		C79E16DBED08DE51CDD9590C /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Pace/Resources/Assets.xcassets; sourceTree = "<group>"; };
+		C85662454098495C035D1698 /* RunRecording.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RunRecording.swift; sourceTree = "<group>"; };
+		C9FD90B8BF8E2C07EFC9C37C /* WatchTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchTheme.swift; sourceTree = "<group>"; };
 		CE790771675231E4E66ADF15 /* LocationTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 		CFA4186B33C814B1A0FD89EF /* Pace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2C65545E6D352BA40E82C29 /* ProgramCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProgramCoordinator.swift; sourceTree = "<group>"; };
 		D3EDB2315DB3F6CC0438B118 /* SwipeToStartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwipeToStartView.swift; sourceTree = "<group>"; };
 		D64FF5794146B86DAC410FF8 /* QuickActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuickActions.swift; sourceTree = "<group>"; };
+		D7C24EB71774ECA2CE32EA92 /* WatchPayloads.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchPayloads.swift; sourceTree = "<group>"; };
 		E20289A61B961611D71AF500 /* AdaptationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdaptationTests.swift; sourceTree = "<group>"; };
 		EB504F4F216A55AC1C6DFEF9 /* WeekDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeekDetailView.swift; sourceTree = "<group>"; };
 		EEC93C2D0EA63A79E5B9E07B /* ProgramDefinition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProgramDefinition.swift; sourceTree = "<group>"; };
+		FAC2D1C27C59DD076C72F1E5 /* WatchSummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchSummaryView.swift; sourceTree = "<group>"; };
+		FE7BECE29CAA17D73F2335D8 /* WorkoutManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		49CF8FFFD5965E93132C36C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F44D4F33595D26BEC285D73E /* Foundation.framework in Frameworks */,
+				D2DED203BE20D7F72AE78AD0 /* HealthKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BAC23EDB12F652D1F13F9272 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -107,8 +177,19 @@
 			children = (
 				CFA4186B33C814B1A0FD89EF /* Pace.app */,
 				9B93E7B9E65B3FDD506AD688 /* PaceTests.xctest */,
+				69914085A7230D67D050F414 /* PaceWatch.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		13E1256195581A7E98397558 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				284C2DA1DDB689E5D216FF24 /* Assets.xcassets */,
+				98562EC0433758A423B9C935 /* Info.plist */,
+			);
+			name = Resources;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		13E1D921CE2A0C386FB64861 /* Engine */ = {
@@ -132,9 +213,19 @@
 				90E41C123111495F1F789804 /* Location */,
 				1BF93F9473AA2951E8D021F9 /* Programs */,
 				95368E468D14557FA08A4C7E /* Views */,
+				ACA8AC105F04BDBB926CFC2B /* Sync */,
 			);
 			name = Sources;
 			path = Pace/Sources;
+			sourceTree = "<group>";
+		};
+		1A6769EC1FA1B86AF42824DF /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				04094996109AF32982E61C16 /* WatchSyncStore.swift */,
+			);
+			name = Sync;
+			path = Sync;
 			sourceTree = "<group>";
 		};
 		1BEBDC6281CDE15FB6D1784F /* iOS */ = {
@@ -164,12 +255,57 @@
 			name = Pace;
 			sourceTree = "<group>";
 		};
+		2FF1BAB0E56CCEFCAC0F7B51 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E21674F3D995187178B243D4 /* App */,
+				DB5544B0AD06410B64C5333E /* Run */,
+				1A6769EC1FA1B86AF42824DF /* Sync */,
+				7A7806B589CFFF796EF9C6EA /* Views */,
+			);
+			name = Sources;
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		30B4AC9B25DFE8EABB6F56A1 /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				3BBD220A25F67736A4787103 /* Foundation.framework */,
+				B4758C174A2FF91C0B64B13C /* HealthKit.framework */,
+			);
+			name = watchOS;
+			sourceTree = "<group>";
+		};
+		6E92E1310EB546C75A74A5BB /* PaceWatch */ = {
+			isa = PBXGroup;
+			children = (
+				2FF1BAB0E56CCEFCAC0F7B51 /* Sources */,
+				13E1256195581A7E98397558 /* Resources */,
+				7B0DDAFB8920C649D0F39652 /* PaceWatch.entitlements */,
+			);
+			name = PaceWatch;
+			path = PaceWatch;
+			sourceTree = "<group>";
+		};
 		753D29A66B42355D1C10B6D9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				1BEBDC6281CDE15FB6D1784F /* iOS */,
+				30B4AC9B25DFE8EABB6F56A1 /* watchOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7A7806B589CFFF796EF9C6EA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				81FA13A6FAE0E8ECDA671CCE /* WatchHomeView.swift */,
+				27893B4F16A72D0E16E42B5C /* WatchRunView.swift */,
+				FAC2D1C27C59DD076C72F1E5 /* WatchSummaryView.swift */,
+				C9FD90B8BF8E2C07EFC9C37C /* WatchTheme.swift */,
+			);
+			name = Views;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		7B45492B56F7448626000195 = {
@@ -179,6 +315,7 @@
 				753D29A66B42355D1C10B6D9 /* Frameworks */,
 				2A463FF8A4383B1CFBFFD72C /* Pace */,
 				B075F21986584A294B6940E6 /* PaceTests */,
+				6E92E1310EB546C75A74A5BB /* PaceWatch */,
 			);
 			sourceTree = "<group>";
 		};
@@ -215,6 +352,7 @@
 				4C6B88ADD3A5A8A9109753F5 /* Theme.swift */,
 				EB504F4F216A55AC1C6DFEF9 /* WeekDetailView.swift */,
 				43C3F466433E4DCA3CE4F8ED /* FreeRunView.swift */,
+				4AFD6A655D9E975D248B4BDE /* Format.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -224,8 +362,19 @@
 			children = (
 				507BE1385CBBB029904D157D /* PersistedModels.swift */,
 				EEC93C2D0EA63A79E5B9E07B /* ProgramDefinition.swift */,
+				C85662454098495C035D1698 /* RunRecording.swift */,
 			);
 			path = Domain;
+			sourceTree = "<group>";
+		};
+		ACA8AC105F04BDBB926CFC2B /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				D7C24EB71774ECA2CE32EA92 /* WatchPayloads.swift */,
+				99CB05C488F894BB753AC304 /* PhoneWatchSync.swift */,
+			);
+			name = Sync;
+			path = Sync;
 			sourceTree = "<group>";
 		};
 		B075F21986584A294B6940E6 /* PaceTests */ = {
@@ -234,6 +383,25 @@
 				E20289A61B961611D71AF500 /* AdaptationTests.swift */,
 			);
 			path = PaceTests;
+			sourceTree = "<group>";
+		};
+		DB5544B0AD06410B64C5333E /* Run */ = {
+			isa = PBXGroup;
+			children = (
+				4C6B0A50E21FA0EB1419119E /* HapticCueService.swift */,
+				FE7BECE29CAA17D73F2335D8 /* WorkoutManager.swift */,
+			);
+			name = Run;
+			path = Run;
+			sourceTree = "<group>";
+		};
+		E21674F3D995187178B243D4 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				844D96AA009BFAEDE5373A97 /* PaceWatchApp.swift */,
+			);
+			name = App;
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,14 +432,33 @@
 				5CD702754B0AAFB7B7C16947 /* Sources */,
 				BAC23EDB12F652D1F13F9272 /* Frameworks */,
 				B255612B51AFCD5076BA602B /* Resources */,
+				6DFCA2E15FFA7E4995B66946 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				603B7006F45F8A55AF361451 /* PBXTargetDependency */,
+			);
+			name = Pace;
+			productName = Pace;
+			productReference = CFA4186B33C814B1A0FD89EF /* Pace.app */;
+			productType = "com.apple.product-type.application";
+		};
+		99C159A9969D32715FE1D964 /* PaceWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D95179D43F19D18C56EB961 /* Build configuration list for PBXNativeTarget "PaceWatch" */;
+			buildPhases = (
+				A942DB7641060A0EF7B40748 /* Sources */,
+				49CF8FFFD5965E93132C36C9 /* Frameworks */,
+				85B64E2962A5E75136DE409F /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Pace;
-			productName = Pace;
-			productReference = CFA4186B33C814B1A0FD89EF /* Pace.app */;
+			name = PaceWatch;
+			productName = PaceWatch;
+			productReference = 69914085A7230D67D050F414 /* PaceWatch.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -307,11 +494,20 @@
 			targets = (
 				7E20543B652CF5737D9918F7 /* Pace */,
 				343EE6879DCE3FE9635E746D /* PaceTests */,
+				99C159A9969D32715FE1D964 /* PaceWatch */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		85B64E2962A5E75136DE409F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				189BAAB7787F6DE5E501841D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B255612B51AFCD5076BA602B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -359,6 +555,10 @@
 				2490EEBD6148096191F1147D /* FreeRunView.swift in Sources */,
 				2FC7E46EEB0A53ED443F2B4E /* RunInsights.swift in Sources */,
 				2A90D23B84683ACBDFF02661 /* QuickActions.swift in Sources */,
+				FD139B94D21F3AF7D7978EF1 /* Format.swift in Sources */,
+				6F8A49356AB40520FF809494 /* RunRecording.swift in Sources */,
+				B96AF2520F523230277209ED /* WatchPayloads.swift in Sources */,
+				C0ED0A35F95C265F36823057 /* PhoneWatchSync.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,9 +570,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A942DB7641060A0EF7B40748 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C496F9F9B3FCB1F49D02F56E /* ProgramDefinition.swift in Sources */,
+				22E56647E94D89B823D65413 /* RunRecording.swift in Sources */,
+				0706F78B0E9E66630C6D5CC1 /* RunSessionController.swift in Sources */,
+				0E4E4AE7E2A60CAA38127F10 /* LocationTracker.swift in Sources */,
+				CF492ADAD24560B11A1F0D30 /* Format.swift in Sources */,
+				CE119C3C609D57086BB6DF80 /* WatchPayloads.swift in Sources */,
+				6FF4B8CFF91C4CB3FD951A9C /* PaceWatchApp.swift in Sources */,
+				7A930EA85B8BFC07F3651523 /* HapticCueService.swift in Sources */,
+				867F80DD133042C24AFE06F2 /* WorkoutManager.swift in Sources */,
+				B13A1DEFC60C4A4B74BB0772 /* WatchSyncStore.swift in Sources */,
+				59F23233143B23A9EA85D50B /* WatchHomeView.swift in Sources */,
+				B015074DFE6A2BF8BC00E2BB /* WatchRunView.swift in Sources */,
+				74663F2CCFA791E80BF2C47B /* WatchSummaryView.swift in Sources */,
+				AD24322B22FAD553F2F1477D /* WatchTheme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		603B7006F45F8A55AF361451 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PaceWatch;
+			target = 99C159A9969D32715FE1D964 /* PaceWatch */;
+			targetProxy = 45FD1178ED3377EE15252D20 /* PBXContainerItemProxy */;
+		};
 		66AA9D45863454C233BCC6C8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Pace;
@@ -520,6 +747,26 @@
 			};
 			name = Debug;
 		};
+		60CD3FEF34F79FDCAAD055E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PaceWatch/PaceWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KEM7F8MF38;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PaceWatch/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.matthieuroussel.Pace.watchkitapp;
+				PRODUCT_NAME = PaceWatch;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
 		6A7EC39269D5762A231B745B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -540,6 +787,27 @@
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
+		};
+		7E3ECCC9C701F6424E5B0010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PaceWatch/PaceWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KEM7F8MF38;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PaceWatch/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.matthieuroussel.Pace.watchkitapp;
+				PRODUCT_NAME = PaceWatch;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
 		};
 		D3EA166E56048F620474CF8E /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -580,6 +848,15 @@
 			buildConfigurations = (
 				362D010D8E35BD96CE801E79 /* Release */,
 				6A7EC39269D5762A231B745B /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D95179D43F19D18C56EB961 /* Build configuration list for PBXNativeTarget "PaceWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E3ECCC9C701F6424E5B0010 /* Release */,
+				60CD3FEF34F79FDCAAD055E6 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

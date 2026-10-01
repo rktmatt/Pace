@@ -1,6 +1,20 @@
 import Foundation
 import Combine
 
+/// How a run speaks to the runner. The iPhone plays tones and speech
+/// (`SoundCueService`); the Watch taps the wrist (`HapticCueService`).
+@MainActor
+protocol RunCueing: AnyObject {
+    func announce(transitionTo interval: IntervalDefinition, isLastRun: Bool, halfwayRemaining: Int?)
+    func announceHalfway(remainingSeconds: Int)
+    func announceMinutesLeft(_ minutes: Int)
+    func announce(switchTo kind: IntervalKind)
+    func countdownTick()
+    func announcePause()
+    func announceResume()
+    func announceCompletion(runningSeconds: Int)
+}
+
 /// Drives an active run: elapsed time, current interval progress, and cue
 /// dispatch. Owns no persistence — the view saves a Run once this reports done.
 ///
@@ -39,7 +53,7 @@ final class RunSessionController: ObservableObject {
     private var segmentStart: (date: Date, elapsed: TimeInterval)?
     private var isStopped = false
     private var timer: AnyCancellable?
-    private let sound = SoundCueService()
+    private let sound: RunCueing
     /// Seconds-left value of the last 3-2-1 tick played, so each sounds once.
     private var lastCountdownSecond: Int?
     /// Index of the final run in a session with more than one, named when announced.
@@ -52,9 +66,10 @@ final class RunSessionController: ObservableObject {
     /// its start), so each mark sounds once.
     private var lastMinutesLeft = 0
 
-    init(session: PlannedSession) {
+    init(intervals: [IntervalDefinition], cues: RunCueing) {
         isFreeRun = false
-        expandedIntervals = session.intervals.timeline
+        sound = cues
+        expandedIntervals = intervals.timeline
         var runningTotal: TimeInterval = 0
         intervalEnds = expandedIntervals.map { interval in
             runningTotal += TimeInterval(interval.durationSeconds)
@@ -70,8 +85,9 @@ final class RunSessionController: ObservableObject {
 
     /// A free run starts walking: most runners ease in, and the first switch
     /// to running is then a deliberate tap.
-    init(freeRunStartingWith kind: IntervalKind = .walk) {
+    init(freeRunStartingWith kind: IntervalKind = .walk, cues: RunCueing) {
         isFreeRun = true
+        sound = cues
         expandedIntervals = []
         intervalEnds = []
         freeKind = kind

@@ -23,7 +23,7 @@ struct ActiveRunView: View {
 
     init(session: PlannedSession?) {
         self.session = session
-        _runController = StateObject(wrappedValue: session.map(RunSessionController.init(session:)) ?? RunSessionController(freeRunStartingWith: .walk))
+        _runController = StateObject(wrappedValue: session.map { RunSessionController(intervals: $0.intervals, cues: SoundCueService()) } ?? RunSessionController(freeRunStartingWith: .walk, cues: SoundCueService()))
     }
 
     private var title: String { session?.title ?? SessionKind.free.label }
@@ -267,7 +267,7 @@ struct ActiveRunView: View {
             endedAt: .now,
             activeDuration: runController.elapsed,
             distanceMeters: location.distanceMeters,
-            routePoints: location.recordedPoints,
+            routePoints: location.recordedPoints.map(RoutePoint.init),
             segments: segments,
             for: session
         )

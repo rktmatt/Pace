@@ -137,6 +137,9 @@ final class Run {
     @Relationship(deleteRule: .cascade) var routePoints: [RoutePoint]
     /// Each run/walk stretch as actually performed. Optional so older stores migrate.
     var segments: [RecordedSegment]?
+    /// Heart rate in beats per minute, recorded only by runs done on the Watch.
+    var averageHeartRate: Double?
+    var maxHeartRate: Double?
 
     var duration: TimeInterval { activeDuration ?? endedAt.timeIntervalSince(startedAt) }
     var sessionKind: SessionKind { SessionKind(rawValue: sessionKindRaw) ?? .easy }
@@ -145,8 +148,8 @@ final class Run {
         return duration / (distanceMeters / 1000)
     }
 
-    init(startedAt: Date, endedAt: Date, activeDuration: TimeInterval? = nil, distanceMeters: Double, sessionKind: SessionKind, plannedSessionID: UUID? = nil, routePoints: [RoutePoint] = [], segments: [RecordedSegment] = []) {
-        self.id = UUID()
+    init(id: UUID = UUID(), startedAt: Date, endedAt: Date, activeDuration: TimeInterval? = nil, distanceMeters: Double, sessionKind: SessionKind, plannedSessionID: UUID? = nil, routePoints: [RoutePoint] = [], segments: [RecordedSegment] = []) {
+        self.id = id
         self.startedAt = startedAt
         self.endedAt = endedAt
         self.activeDuration = activeDuration
@@ -155,22 +158,6 @@ final class Run {
         self.plannedSessionID = plannedSessionID
         self.routePoints = routePoints
         self.segments = segments
-    }
-}
-
-/// One stretch of a finished run at a single effort — a planned interval as it
-/// was actually done, or a run/walk switch the runner made in a free run.
-struct RecordedSegment: Codable, Hashable {
-    var kind: IntervalKind
-    var startedAt: Date
-    var endedAt: Date
-    /// Time spent in the segment, excluding pauses.
-    var activeDuration: TimeInterval
-    var distanceMeters: Double = 0
-
-    var paceSecondsPerKm: Double? {
-        guard distanceMeters > 0, activeDuration > 0 else { return nil }
-        return activeDuration / (distanceMeters / 1000)
     }
 }
 
@@ -192,5 +179,9 @@ final class RoutePoint {
         self.horizontalAccuracy = horizontalAccuracy
         self.speed = speed
         self.course = course
+    }
+
+    convenience init(_ sample: RouteSample) {
+        self.init(timestamp: sample.timestamp, latitude: sample.latitude, longitude: sample.longitude, altitude: sample.altitude, horizontalAccuracy: sample.horizontalAccuracy, speed: sample.speed, course: sample.course)
     }
 }

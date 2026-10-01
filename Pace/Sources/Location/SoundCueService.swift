@@ -14,7 +14,7 @@ import AVFoundation
 /// only active while a cue is sounding: music is ducked and podcasts paused for
 /// those seconds, then handed back.
 @MainActor
-final class SoundCueService: NSObject {
+final class SoundCueService: NSObject, RunCueing {
     private let synthesizer = AVSpeechSynthesizer()
     /// Cue text is written in the app's UI language, so the voice must match it —
     /// not the device's system language, which would read English with a foreign accent.

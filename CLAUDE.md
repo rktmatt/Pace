@@ -40,7 +40,7 @@ fluctuating motivation; the goal is sustainable progress, not perfect adherence 
 accent, minimal decoration. Not a pastel wellness app. Should be legible and usable mid-run with minimal
 attention (see `ActiveRunView`).
 
-**Not yet built / deliberately deferred**: CloudKit sync, Apple Health integration, on-device LLM
+**Not yet built / deliberately deferred**: CloudKit sync, Apple Health integration (the Watch reads heart rate during a run but saves nothing to Health), on-device LLM
 narrative phrasing layer (the deterministic engine already produces explanation text in
 `AdaptationEngine.decide`; swapping in model-generated phrasing is an isolated follow-up, not a
 prerequisite). Keep these out of scope unless explicitly asked for.
@@ -72,6 +72,10 @@ Run unit tests (`PaceTests` target, XCTest, hosted in the app; covers `Adaptatio
 xcodebuild test -project Pace.xcodeproj -scheme Pace -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ```
 Add tests there when changing adaptation policy or scheduling logic.
+
+The scheme embeds the `PaceWatch` app, so building it needs the watchOS simulator runtime installed
+(Xcode → Settings → Components). Without it, typecheck the Watch sources with
+`xcrun -sdk watchos swiftc -typecheck -target arm64-apple-watchos10.0 <shared files> PaceWatch/Sources/*/*.swift`.
 
 The project file (`Pace.xcodeproj`) was generated with the `xcodeproj` Ruby gem rather than Xcode's GUI or
 XcodeGen. If you need to add/remove/move Swift files, either edit `project.pbxproj` directly, regenerate
@@ -147,6 +151,21 @@ Source lives under `Pace/Sources`, grouped by role rather than by screen:
   session, subtitle = duration · title) sits above Free run / Plan / History. A scene delegate feeds the
   picked action to `QuickActionRouter.pending`; `RootView` switches tab, `HomeView`/`FreeRunView` consume it
   to start the run. Ignored while `ActiveRunView` is up (`isRunInProgress`).
+- **`Sync/`** — the iPhone ↔ Watch link (WatchConnectivity, device to device, no server).
+  `WatchPayloads.swift` (shared with the Watch) defines the Codable payloads. `PhoneWatchSync` pushes the
+  next planned sessions as the application context whenever the plan may have changed (app active /
+  background, after the weekly check, palette change) and records runs the Watch sends as file transfers
+  via `ProgramCoordinator.recordWatchRun` (idempotent by run id; a run for an already-completed session
+  is kept as a free run). The phone is the only source of truth for the plan; the Watch never adapts.
+- **`PaceWatch/`** (separate top-level folder, `PaceWatch` watchOS 10 target embedded in the iPhone app) —
+  a standalone runner: `WatchHomeView` (next session + free run), `WatchRunView` (countdown, haptic cues,
+  swipe for pause/end), `WatchSummaryView`. It compiles the shared engine files directly:
+  `ProgramDefinition`, `RunRecording` (`RecordedSegment`, `RouteSample`), `RunSessionController`,
+  `LocationTracker`, `Format`, `WatchPayloads` — keep those free of UIKit/SwiftData. Cues go through the
+  `RunCueing` protocol (`SoundCueService` on iPhone, `HapticCueService` on Watch). `WorkoutManager` runs
+  an `HKWorkoutSession` to stay alive wrist-down and read heart rate (stored as `Run.averageHeartRate`/
+  `maxHeartRate`); the workout is discarded, never saved to Health. `WatchSyncStore` keeps finished runs in
+  an on-disk outbox until the transfer is confirmed.
 - **`Views/`** — `RootView` (tab bar: Today / Free run / Plan / History), `FreeRunView` (starts an
   off-plan run/walk session), `HomeView` (today's session, week progress,
   adaptation feedback banner), `ActiveRunView` (full-screen, glanceable: big segment countdown colored by

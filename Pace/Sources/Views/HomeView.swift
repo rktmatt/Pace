@@ -66,6 +66,7 @@ struct HomeView: View {
         if let program = coordinator.activeProgram() {
             coordinator.evaluateWeeksIfNeeded(program: program)
         }
+        PhoneWatchSync.shared.pushSchedule()
     }
 
     /// "Start week N" quick action: same as swiping to start the next session.

@@ -1,0 +1,67 @@
+import Foundation
+
+/// What crosses between the iPhone and the Watch over WatchConnectivity —
+/// directly between the user's own devices, never through a server.
+///
+/// The phone stays the source of truth for the plan: it sends the upcoming
+/// sessions down as the application context (only the latest one matters), and
+/// the Watch sends each finished run up as a file transfer (queued by the
+/// system until the phone can take it, and big enough for a route).
+enum WatchSync {
+    static let scheduleKey = "schedule"
+    static let runMetadataKey = "run"
+    /// Upcoming sessions sent to the Watch: enough for a week or two without
+    /// the phone, small enough to stay well under the context size limit.
+    static let upcomingSessionLimit = 6
+
+    static let encoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        return encoder
+    }()
+
+    static let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        return decoder
+    }()
+}
+
+/// A planned session as the Watch needs it to run it.
+struct WatchSession: Codable, Hashable, Identifiable {
+    var id: UUID
+    var week: Int
+    var scheduledAt: Date
+    var kind: SessionKind
+    var title: String
+    var intervals: [IntervalDefinition]
+    var adjustmentNote: String?
+
+    var plannedDurationSeconds: Int { intervals.reduce(0) { $0 + $1.durationSeconds * Swift.max($1.repeatCount, 1) } }
+}
+
+/// The plan as of `generatedAt`: the next planned sessions, soonest first.
+struct WatchSchedule: Codable, Hashable {
+    var generatedAt: Date
+    var programTitle: String
+    var totalWeeks: Int
+    var sessions: [WatchSession]
+    /// Mint or pink, so the Watch matches the phone.
+    var palette: String
+}
+
+/// A run finished on the Watch, sent to the phone to be recorded.
+struct WatchRun: Codable, Hashable, Identifiable {
+    /// Becomes the phone's `Run.id`, so a transfer delivered twice is recorded once.
+    var id: UUID
+    /// Nil for a free run.
+    var plannedSessionID: UUID?
+    var startedAt: Date
+    var endedAt: Date
+    var activeDuration: TimeInterval
+    var distanceMeters: Double
+    var segments: [RecordedSegment]
+    var route: [RouteSample]
+    var averageHeartRate: Double?
+    var maxHeartRate: Double?
+}

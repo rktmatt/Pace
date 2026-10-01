@@ -88,6 +88,12 @@ struct RunSummaryView: View {
                 StatTile(value: Format.pace(seconds: run.duration, meters: run.distanceMeters), unit: "/KM", label: "AVG PACE")
                 StatTile(value: run.startedAt.formatted(date: .omitted, time: .shortened), unit: nil, label: "STARTED")
             }
+            if let average = run.averageHeartRate {
+                GridRow {
+                    StatTile(value: "\(Int(average.rounded()))", unit: "BPM", label: "AVG HEART RATE")
+                    StatTile(value: run.maxHeartRate.map { "\(Int($0.rounded()))" } ?? "—", unit: "BPM", label: "MAX HEART RATE")
+                }
+            }
         }
     }
 }

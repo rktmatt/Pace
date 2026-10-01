@@ -247,6 +247,39 @@ final class AdaptationApplierTests: XCTestCase {
         XCTAssertEqual(TrainingAnalyzer.snapshot(week: 1, plannedSessions: sessions, runs: [run]).actualMinutes, 0)
     }
 
+    private func watchRun(for sessionID: UUID?, id: UUID = UUID()) -> WatchRun {
+        WatchRun(id: id, plannedSessionID: sessionID, startedAt: .now, endedAt: .now.addingTimeInterval(1200), activeDuration: 1200, distanceMeters: 2500, segments: [], route: [RouteSample(timestamp: .now, latitude: 48.85, longitude: 2.35, altitude: 35, horizontalAccuracy: 5, speed: 2, course: 0)], averageHeartRate: 142, maxHeartRate: 171)
+    }
+
+    func testWatchRunCompletesItsSessionOnce() {
+        let coordinator = ProgramCoordinator(context: context)
+        coordinator.ensureProgramSeeded()
+        let session = try! context.fetch(FetchDescriptor<PlannedSession>(sortBy: [SortDescriptor(\.scheduledAt)])).first!
+        let payload = watchRun(for: session.id)
+
+        let run = coordinator.recordWatchRun(payload)
+        XCTAssertEqual(run?.id, payload.id)
+        XCTAssertEqual(run?.plannedSessionID, session.id)
+        XCTAssertEqual(run?.averageHeartRate, 142)
+        XCTAssertEqual(run?.routePoints.count, 1)
+        XCTAssertEqual(session.state, .completed)
+
+        // A redelivered transfer is ignored.
+        XCTAssertNil(coordinator.recordWatchRun(payload))
+        XCTAssertEqual(try! context.fetch(FetchDescriptor<Run>()).count, 1)
+    }
+
+    func testWatchRunForAnAlreadyCompletedSessionIsKeptAsFreeRun() {
+        let coordinator = ProgramCoordinator(context: context)
+        coordinator.ensureProgramSeeded()
+        let session = try! context.fetch(FetchDescriptor<PlannedSession>(sortBy: [SortDescriptor(\.scheduledAt)])).first!
+        coordinator.recordRun(startedAt: .now, endedAt: .now.addingTimeInterval(1200), activeDuration: 1200, distanceMeters: 2500, routePoints: [], for: session)
+
+        let run = coordinator.recordWatchRun(watchRun(for: session.id))
+        XCTAssertNil(run?.plannedSessionID)
+        XCTAssertEqual(run?.sessionKind, .free)
+    }
+
     func testMigrationRebuildsUpcomingSessionsInPlace() {
         let coordinator = ProgramCoordinator(context: context)
         coordinator.ensureProgramSeeded()

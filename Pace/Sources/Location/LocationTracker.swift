@@ -3,6 +3,7 @@ import CoreLocation
 import Combine
 
 /// Wraps CLLocationManager for foreground + locked-screen background tracking.
+/// Shared with the Watch app, where an active workout session keeps it running.
 /// Accuracy/battery balance: best accuracy while a run is active, filtered by
 /// a distance filter and an accuracy/speed sanity check to reject GPS jumps.
 @MainActor
@@ -10,7 +11,7 @@ final class LocationTracker: NSObject, ObservableObject {
     @Published private(set) var authorizationStatus: CLAuthorizationStatus
     @Published private(set) var distanceMeters: Double = 0
     @Published private(set) var currentSpeed: Double = 0 // meters/sec
-    @Published private(set) var recordedPoints: [RoutePoint] = []
+    @Published private(set) var recordedPoints: [RouteSample] = []
 
     private let manager = CLLocationManager()
     /// Cumulative distance at each accepted fix, so any stretch of the run
@@ -31,8 +32,10 @@ final class LocationTracker: NSObject, ObservableObject {
         manager.activityType = .fitness
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.distanceFilter = 5
+        #if os(iOS)
         manager.pausesLocationUpdatesAutomatically = false
         manager.showsBackgroundLocationIndicator = true
+        #endif
     }
 
     func requestAuthorization() {
@@ -56,8 +59,7 @@ final class LocationTracker: NSObject, ObservableObject {
         trackingStartedAt = .now
         // With the `location` background mode, updates started in the foreground
         // keep flowing while the phone is locked under When-In-Use authorization too.
-        let status = manager.authorizationStatus
-        manager.allowsBackgroundLocationUpdates = status == .authorizedWhenInUse || status == .authorizedAlways
+        updateBackgroundUpdates(enabled: true)
         manager.startUpdatingLocation()
     }
 
@@ -72,8 +74,18 @@ final class LocationTracker: NSObject, ObservableObject {
     }
 
     func stopTracking() {
-        manager.allowsBackgroundLocationUpdates = false
+        updateBackgroundUpdates(enabled: false)
         manager.stopUpdatingLocation()
+    }
+
+    /// iPhone only: the `location` background mode keeps fixes flowing while
+    /// locked. On the Watch the workout session does that, and setting this
+    /// without the `location` mode would trap.
+    private func updateBackgroundUpdates(enabled: Bool) {
+        #if os(iOS)
+        let status = manager.authorizationStatus
+        manager.allowsBackgroundLocationUpdates = enabled && (status == .authorizedWhenInUse || status == .authorizedAlways)
+        #endif
     }
 
     /// Distance covered by `date`, interpolated between fixes. Flat across
@@ -96,7 +108,7 @@ extension LocationTracker: CLLocationManagerDelegate {
         Task { @MainActor in
             self.authorizationStatus = status
             // Permission is often granted after tracking already started on first run.
-            self.manager.allowsBackgroundLocationUpdates = status == .authorizedWhenInUse || status == .authorizedAlways
+            self.updateBackgroundUpdates(enabled: true)
         }
     }
 
@@ -138,7 +150,7 @@ extension LocationTracker: CLLocationManagerDelegate {
     }
 
     private func record(_ location: CLLocation) {
-        recordedPoints.append(RoutePoint(
+        recordedPoints.append(RouteSample(
             timestamp: location.timestamp,
             latitude: location.coordinate.latitude,
             longitude: location.coordinate.longitude,
