@@ -5,14 +5,17 @@ import Foundation
 ///
 /// The phone stays the source of truth for the plan: it sends the upcoming
 /// sessions down as the application context (only the latest one matters), and
-/// the Watch sends each finished run up as a file transfer (queued by the
-/// system until the phone can take it, and big enough for a route).
+/// the Watch sends each finished run up — as a direct message when the phone
+/// app is reachable, otherwise as a file transfer the system queues — and keeps
+/// it until the phone confirms it was recorded.
 enum WatchSync {
     static let scheduleKey = "schedule"
     static let runMetadataKey = "run"
     /// Message the Watch sends on launch to ask for the plan when the phone is
     /// reachable; the reply carries the schedule under `scheduleKey`.
     static let requestScheduleKey = "requestSchedule"
+    /// Recorded run ids echoed back to the Watch as delivery receipts.
+    static let receiptLimit = 30
     /// Upcoming sessions sent to the Watch: enough for a week or two without
     /// the phone, small enough to stay well under the context size limit.
     static let upcomingSessionLimit = 6
@@ -51,6 +54,15 @@ struct WatchSchedule: Codable, Hashable {
     var sessions: [WatchSession]
     /// Mint or pink, so the Watch matches the phone.
     var palette: String
+    /// The most recent runs the phone has recorded. The Watch keeps each run it
+    /// sends until its id shows up here (or in a `WatchRunReceipt`).
+    var recordedRunIDs: [UUID]?
+}
+
+/// The phone's reply to a run sent as a direct message: recorded (or already
+/// had it), so the Watch can drop its copy.
+struct WatchRunReceipt: Codable, Hashable {
+    var runID: UUID
 }
 
 /// A run finished on the Watch, sent to the phone to be recorded.

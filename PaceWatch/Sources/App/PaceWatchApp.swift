@@ -13,7 +13,10 @@ struct PaceWatchApp: App {
                 .onAppear { sync.activate() }
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { sync.requestSchedule() }
+            if phase == .active {
+                sync.requestSchedule()
+                sync.flushOutbox()
+            }
         }
     }
 }

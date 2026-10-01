@@ -47,6 +47,10 @@ final class PhoneWatchSync: NSObject {
         descriptor.fetchLimit = WatchSync.upcomingSessionLimit
         let sessions = (try? context.fetch(descriptor)) ?? []
 
+        var recent = FetchDescriptor<Run>(sortBy: [SortDescriptor(\.startedAt, order: .reverse)])
+        recent.fetchLimit = WatchSync.receiptLimit
+        let recordedRunIDs = ((try? context.fetch(recent)) ?? []).map(\.id)
+
         let definition = Couch5KProgram.definition
         return WatchSchedule(
             generatedAt: .distantPast,
@@ -55,7 +59,8 @@ final class PhoneWatchSync: NSObject {
             sessions: sessions.map { session in
                 WatchSession(id: session.id, week: session.week, scheduledAt: session.scheduledAt, kind: session.kind, title: session.title, intervals: session.intervals, adjustmentNote: session.adjustmentNote)
             },
-            palette: UserDefaults.standard.string(forKey: Palette.storageKey) ?? Palette.mint.rawValue
+            palette: UserDefaults.standard.string(forKey: Palette.storageKey) ?? Palette.mint.rawValue,
+            recordedRunIDs: recordedRunIDs
         )
     }
 
@@ -68,11 +73,16 @@ final class PhoneWatchSync: NSObject {
         return [WatchSync.scheduleKey: data]
     }
 
-    private func record(_ run: WatchRun) {
-        guard let context = container?.mainContext else { return }
-        guard ProgramCoordinator(context: context).recordWatchRun(run) != nil else { return }
-        try? context.save()
+    /// Records the run (once, by id) and confirms it to the Watch through the
+    /// next schedule. Returns whether the run is now stored.
+    @discardableResult
+    private func record(_ run: WatchRun) -> Bool {
+        guard let context = container?.mainContext else { return false }
+        if ProgramCoordinator(context: context).recordWatchRun(run) != nil {
+            try? context.save()
+        }
         pushSchedule()
+        return true
     }
 }
 
@@ -98,6 +108,16 @@ extension PhoneWatchSync: WCSessionDelegate {
     nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
         guard message[WatchSync.requestScheduleKey] != nil else { return replyHandler([:]) }
         Task { @MainActor in replyHandler(self.scheduleReply()) }
+    }
+
+    /// A run sent directly while both apps are up; the reply is its receipt.
+    nonisolated func session(_ session: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
+        guard let run = try? WatchSync.decoder.decode(WatchRun.self, from: messageData) else { return replyHandler(Data()) }
+        Task { @MainActor in
+            let stored = self.record(run)
+            let receipt = stored ? try? WatchSync.encoder.encode(WatchRunReceipt(runID: run.id)) : nil
+            replyHandler(receipt ?? Data())
+        }
     }
 
     /// The file is deleted when this returns, so it's read here, synchronously.
