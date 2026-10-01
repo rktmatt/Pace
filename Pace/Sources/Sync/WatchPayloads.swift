@@ -79,4 +79,6 @@ struct WatchRun: Codable, Hashable, Identifiable {
     var route: [RouteSample]
     var averageHeartRate: Double?
     var maxHeartRate: Double?
+    /// Downsampled readings for the recap's heart-rate line.
+    var heartRate: [HeartRateSample]?
 }

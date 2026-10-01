@@ -140,6 +140,8 @@ final class Run {
     /// Heart rate in beats per minute, recorded only by runs done on the Watch.
     var averageHeartRate: Double?
     var maxHeartRate: Double?
+    /// Downsampled heart rate over the run, drawn on the recap. Watch runs only.
+    var heartRateSamples: [HeartRateSample]?
 
     var duration: TimeInterval { activeDuration ?? endedAt.timeIntervalSince(startedAt) }
     var sessionKind: SessionKind { SessionKind(rawValue: sessionKindRaw) ?? .easy }

@@ -11,6 +11,8 @@ final class WorkoutManager: NSObject, ObservableObject {
     @Published private(set) var heartRate: Double?
     @Published private(set) var averageHeartRate: Double?
     @Published private(set) var maxHeartRate: Double?
+    /// Every reading of the run, to average each segment at the end.
+    private(set) var heartRateSamples: [HeartRateSample] = []
 
     private let store = HKHealthStore()
     private var session: HKWorkoutSession?
@@ -60,6 +62,8 @@ final class WorkoutManager: NSObject, ObservableObject {
     private func record(_ statistics: HKStatistics) {
         guard let latest = statistics.mostRecentQuantity()?.doubleValue(for: Self.beatsPerMinute) else { return }
         heartRate = latest
+        let takenAt = statistics.mostRecentQuantityDateInterval()?.end ?? .now
+        heartRateSamples.append(HeartRateSample(timestamp: takenAt, beatsPerMinute: latest))
         heartRateSum += latest
         heartRateCount += 1
         maxHeartRate = max(maxHeartRate ?? 0, latest)

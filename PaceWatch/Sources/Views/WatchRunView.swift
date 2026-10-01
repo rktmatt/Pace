@@ -223,6 +223,7 @@ struct WatchRunView: View {
         let segments = runController.recordedSegments.map { segment in
             var measured = segment
             measured.distanceMeters = max(0, location.distance(at: segment.endedAt) - location.distance(at: segment.startedAt))
+            measured.averageHeartRate = workout.heartRateSamples.averageBeatsPerMinute(from: segment.startedAt, to: segment.endedAt)
             return measured
         }
         let run = WatchRun(
@@ -235,7 +236,8 @@ struct WatchRunView: View {
             segments: segments,
             route: location.recordedPoints,
             averageHeartRate: workout.averageHeartRate,
-            maxHeartRate: workout.maxHeartRate
+            maxHeartRate: workout.maxHeartRate,
+            heartRate: workout.heartRateSamples.downsampled(every: 10)
         )
         WatchSyncStore.shared.send(run)
         withAnimation(.easeInOut(duration: 0.3)) {

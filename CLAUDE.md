@@ -154,9 +154,11 @@ Source lives under `Pace/Sources`, grouped by role rather than by screen:
 - **`Sync/`** — the iPhone ↔ Watch link (WatchConnectivity, device to device, no server).
   `WatchPayloads.swift` (shared with the Watch) defines the Codable payloads. `PhoneWatchSync` pushes the
   next planned sessions as the application context whenever the plan may have changed (app active /
-  background, after the weekly check, palette change) and records runs the Watch sends as file transfers
-  via `ProgramCoordinator.recordWatchRun` (idempotent by run id; a run for an already-completed session
-  is kept as a free run). The phone is the only source of truth for the plan; the Watch never adapts.
+  background, after the weekly check, palette change) and records runs the Watch sends via
+  `ProgramCoordinator.recordWatchRun` (idempotent by run id; a run for an already-completed session is
+  kept as a free run). The Watch keeps each run in its outbox until the phone confirms it — a reply to a
+  direct message, or the run id listed in the schedule's `recordedRunIDs`. A transfer reported as
+  "finished" is not proof of delivery; never delete outbox runs on it. The phone is the only source of truth for the plan; the Watch never adapts.
 - **`PaceWatch/`** (separate top-level folder, `PaceWatch` watchOS 10 target embedded in the iPhone app) —
   a standalone runner: `WatchHomeView` (next session + free run), `WatchRunView` (countdown, haptic cues,
   swipe for pause/end), `WatchSummaryView`. It compiles the shared engine files directly:
@@ -165,7 +167,8 @@ Source lives under `Pace/Sources`, grouped by role rather than by screen:
   through the `RunCueing` protocol: `SoundCueService` on iPhone; on Watch `CombinedCues` = `HapticCueService`
   plus the same `SoundCueService` tones/speech (speaker or AirPods), toggled by "Voice cues" on Watch Home. `WorkoutManager` runs
   an `HKWorkoutSession` to stay alive wrist-down and read heart rate (stored as `Run.averageHeartRate`/
-  `maxHeartRate`); the workout is discarded, never saved to Health. `WatchSyncStore` keeps finished runs in
+  `maxHeartRate`, per-segment `RecordedSegment.averageHeartRate`, and a 10 s-downsampled
+  `Run.heartRateSamples` series drawn as the recap's heart-rate chart over the interval colors); the workout is discarded, never saved to Health. `WatchSyncStore` keeps finished runs in
   an on-disk outbox until the transfer is confirmed.
 - **`Views/`** — `RootView` (tab bar: Today / Free run / Plan / History), `FreeRunView` (starts an
   off-plan run/walk session), `HomeView` (today's session, week progress,

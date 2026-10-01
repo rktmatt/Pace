@@ -269,6 +269,43 @@ final class AdaptationApplierTests: XCTestCase {
         XCTAssertEqual(try! context.fetch(FetchDescriptor<Run>()).count, 1)
     }
 
+    func testSegmentHeartRateAveragesOnlyReadingsInsideIt() {
+        let start = Date(timeIntervalSince1970: 0)
+        let samples = [
+            HeartRateSample(timestamp: start.addingTimeInterval(-5), beatsPerMinute: 90),
+            HeartRateSample(timestamp: start.addingTimeInterval(10), beatsPerMinute: 140),
+            HeartRateSample(timestamp: start.addingTimeInterval(55), beatsPerMinute: 150),
+            HeartRateSample(timestamp: start.addingTimeInterval(70), beatsPerMinute: 120),
+        ]
+        XCTAssertEqual(samples.averageBeatsPerMinute(from: start, to: start.addingTimeInterval(60)), 145)
+        XCTAssertNil(samples.averageBeatsPerMinute(from: start.addingTimeInterval(100), to: start.addingTimeInterval(160)))
+    }
+
+    func testHeartRateDownsamplesToOneReadingPerBucket() {
+        let start = Date(timeIntervalSince1970: 0)
+        let samples = (0..<30).map { HeartRateSample(timestamp: start.addingTimeInterval(Double($0)), beatsPerMinute: Double(100 + $0)) }
+        let downsampled = samples.downsampled(every: 10)
+        XCTAssertEqual(downsampled.count, 3)
+        XCTAssertEqual(downsampled.first?.beatsPerMinute, 104.5)
+        XCTAssertEqual(downsampled.first?.timestamp, start.addingTimeInterval(4.5))
+    }
+
+    func testWatchRunKeepsHeartRateSeries() {
+        let coordinator = ProgramCoordinator(context: context)
+        var payload = watchRun(for: nil)
+        payload.heartRate = [HeartRateSample(timestamp: .now, beatsPerMinute: 120), HeartRateSample(timestamp: .now.addingTimeInterval(10), beatsPerMinute: 135)]
+        XCTAssertEqual(coordinator.recordWatchRun(payload)?.heartRateSamples?.count, 2)
+    }
+
+    func testWatchRunKeepsSegmentHeartRate() {
+        let coordinator = ProgramCoordinator(context: context)
+        var payload = watchRun(for: nil)
+        payload.segments = [RecordedSegment(kind: .run, startedAt: .now, endedAt: .now.addingTimeInterval(60), activeDuration: 60, distanceMeters: 150, averageHeartRate: 148)]
+
+        let run = coordinator.recordWatchRun(payload)
+        XCTAssertEqual(run?.segments?.first?.averageHeartRate, 148)
+    }
+
     func testWatchRunForAnAlreadyCompletedSessionIsKeptAsFreeRun() {
         let coordinator = ProgramCoordinator(context: context)
         coordinator.ensureProgramSeeded()

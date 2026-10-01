@@ -102,8 +102,12 @@ final class WatchSyncStore: NSObject, ObservableObject {
                 if acknowledged == id { self.confirm([id]) }
             }
         }, errorHandler: { _ in
-            // Unreachable mid-send: the next flush queues it as a file instead.
-            Task { @MainActor in self.sending.remove(id) }
+            // Unreachable mid-send, or over the message size limit (a long
+            // route): queue it as a file, which has no size limit.
+            Task { @MainActor in
+                self.sending.remove(id)
+                WCSession.default.transferFile(url, metadata: [WatchSync.runMetadataKey: id.uuidString])
+            }
         })
     }
 

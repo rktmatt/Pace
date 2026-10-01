@@ -247,6 +247,7 @@ struct ProgramCoordinator {
         )
         run.averageHeartRate = payload.averageHeartRate
         run.maxHeartRate = payload.maxHeartRate
+        run.heartRateSamples = payload.heartRate
         return run
     }
 }

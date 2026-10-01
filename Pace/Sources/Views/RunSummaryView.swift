@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import MapKit
+import Charts
 
 /// Post-run recap: the route drawn on a map zoomed to fit it, plus the numbers.
 /// Shown right after a run finishes (with a Done button) and from History.
@@ -46,6 +47,9 @@ struct RunSummaryView: View {
                         .frame(height: 340)
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                     statsGrid
+                    if let samples = run.heartRateSamples, samples.count >= 2 {
+                        HeartRateCard(samples: samples, segments: run.segments ?? [], average: run.averageHeartRate, max: run.maxHeartRate)
+                    }
                     if let segments = run.segments, !segments.isEmpty {
                         SegmentsCard(segments: segments)
                     }
@@ -144,11 +148,88 @@ struct AdjustmentCard: View {
     }
 }
 
-/// Every interval as it was actually run: duration, distance and pace, with a
-/// bar comparing its speed to the fastest segment so fading or pacing shows
-/// at a glance.
+/// Every interval as it was actually run: duration, distance, pace and, for
+/// Watch runs, heart rate, with a bar comparing its speed to the fastest
+/// segment so fading or pacing shows at a glance.
+/// Heart rate over the run, drawn over the intervals it happened in: faint
+/// bands in each interval's color, and the same colors as a strip along the
+/// bottom, so the line visibly climbs through runs and settles in walks.
+private struct HeartRateCard: View {
+    let samples: [HeartRateSample]
+    let segments: [RecordedSegment]
+    let average: Double?
+    let max: Double?
+
+    private static let lineColor = Color(red: 1.0, green: 0.32, blue: 0.38)
+
+    /// A little headroom around the readings so the line never touches the edges.
+    private var domain: ClosedRange<Double> {
+        let values = samples.map(\.beatsPerMinute)
+        let low = ((values.min() ?? 60) - 12) / 10
+        let high = ((values.max() ?? 180) + 6) / 10
+        return (low.rounded(.down) * 10)...(high.rounded(.up) * 10)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("HEART RATE")
+                    .font(.caption.weight(.bold))
+                    .tracking(1.4)
+                    .foregroundStyle(Theme.accent)
+                Spacer()
+                if let average, let max {
+                    Text("AVG \(Int(average.rounded())) · MAX \(Int(max.rounded())) BPM")
+                        .font(.caption.weight(.black).monospacedDigit())
+                        .tracking(0.6)
+                        .foregroundStyle(Self.lineColor)
+                }
+            }
+
+            Chart {
+                let domain = domain
+                let strip = (domain.upperBound - domain.lowerBound) * 0.05
+                ForEach(Array(segments.enumerated()), id: \.offset) { _, segment in
+                    RectangleMark(xStart: .value("Start", segment.startedAt), xEnd: .value("End", segment.endedAt))
+                        .foregroundStyle(segment.kind.color.opacity(0.12))
+                    RectangleMark(
+                        xStart: .value("Start", segment.startedAt),
+                        xEnd: .value("End", segment.endedAt),
+                        yStart: .value("BPM", domain.lowerBound),
+                        yEnd: .value("BPM", domain.lowerBound + strip)
+                    )
+                    .foregroundStyle(segment.kind.color)
+                }
+                ForEach(samples, id: \.timestamp) { sample in
+                    LineMark(x: .value("Time", sample.timestamp), y: .value("BPM", sample.beatsPerMinute))
+                        .interpolationMethod(.catmullRom)
+                        .lineStyle(StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
+                        .foregroundStyle(Self.lineColor)
+                }
+            }
+            .chartYScale(domain: domain)
+            .chartXAxis(.hidden)
+            .chartYAxis {
+                AxisMarks(position: .trailing, values: .automatic(desiredCount: 3)) { _ in
+                    AxisGridLine().foregroundStyle(Theme.text.opacity(0.08))
+                    AxisValueLabel()
+                        .font(.caption2.weight(.semibold).monospacedDigit())
+                        .foregroundStyle(Theme.secondaryText)
+                }
+            }
+            .frame(height: 130)
+            .accessibilityLabel("Heart rate over the run")
+            .accessibilityValue(average.map { "Average \(Int($0.rounded())) beats per minute" } ?? "")
+        }
+        .padding(18)
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: 20))
+    }
+}
+
 private struct SegmentsCard: View {
     let segments: [RecordedSegment]
+
+    private var showsHeartRate: Bool { segments.contains { $0.averageHeartRate != nil } }
 
     private var maxSpeed: Double {
         segments.map { $0.distanceMeters / max($0.activeDuration, 1) }.max() ?? 0
@@ -181,6 +262,9 @@ private struct SegmentsCard: View {
                 Text("TIME").frame(width: 48, alignment: .trailing)
                 Text("KM").frame(width: 40, alignment: .trailing)
                 Text("/KM").frame(width: 52, alignment: .trailing)
+                if showsHeartRate {
+                    Text("BPM").frame(width: 34, alignment: .trailing)
+                }
             }
             .font(.caption2.weight(.bold))
             .tracking(0.8)
@@ -189,7 +273,7 @@ private struct SegmentsCard: View {
 
             VStack(spacing: 14) {
                 ForEach(segments.indices, id: \.self) { index in
-                    SegmentRow(segment: segments[index], number: number(at: index), maxSpeed: maxSpeed)
+                    SegmentRow(segment: segments[index], number: number(at: index), maxSpeed: maxSpeed, showsHeartRate: showsHeartRate)
                 }
             }
         }
@@ -207,6 +291,7 @@ private struct SegmentRow: View {
     let segment: RecordedSegment
     let number: Int
     let maxSpeed: Double
+    let showsHeartRate: Bool
 
     private var speedFraction: Double {
         guard maxSpeed > 0 else { return 0 }
@@ -224,6 +309,8 @@ private struct SegmentRow: View {
                     .frame(width: 22)
                 Text(showsNumber ? "\(segment.kind.voicePrompt) \(number)" : segment.kind.voicePrompt)
                     .font(.subheadline.weight(.semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                 Spacer()
                 Text(Format.clock(segment.activeDuration))
                     .font(.footnote.weight(.semibold).monospacedDigit())
@@ -236,6 +323,12 @@ private struct SegmentRow: View {
                 Text(Format.pace(seconds: segment.activeDuration, meters: segment.distanceMeters))
                     .font(.subheadline.weight(.black).monospacedDigit())
                     .frame(width: 52, alignment: .trailing)
+                if showsHeartRate {
+                    Text(segment.averageHeartRate.map { "\(Int($0.rounded()))" } ?? "—")
+                        .font(.footnote.weight(.semibold).monospacedDigit())
+                        .foregroundStyle(Theme.secondaryText)
+                        .frame(width: 34, alignment: .trailing)
+                }
             }
             GeometryReader { proxy in
                 ZStack(alignment: .leading) {
