@@ -10,12 +10,17 @@ struct PaceApp: App {
     }()
 
     @AppStorage(Appearance.storageKey) private var appearance: Appearance = .dark
+    @AppStorage(Palette.storageKey) private var palette: Palette = .mint
 
     var body: some Scene {
         WindowGroup {
             RootView()
-                .onAppear { appearance.apply() }
+                .onAppear {
+                    appearance.apply()
+                    palette.apply()
+                }
                 .onChange(of: appearance) { _, newValue in newValue.apply() }
+                .onChange(of: palette) { _, newValue in newValue.apply() }
         }
         .modelContainer(modelContainer)
     }

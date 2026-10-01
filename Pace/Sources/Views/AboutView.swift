@@ -11,6 +11,7 @@ struct AboutView: View {
 
     @Environment(\.dismiss) private var dismiss
     @AppStorage(Appearance.storageKey) private var appearance: Appearance = .dark
+    @AppStorage(Palette.storageKey) private var palette: Palette = .mint
 
     private var version: String {
         let info = Bundle.main.infoDictionary
@@ -95,6 +96,12 @@ struct AboutView: View {
                 .font(.headline.weight(.bold))
             Picker("Appearance", selection: $appearance) {
                 ForEach(Appearance.allCases) { option in
+                    Text(option.label).tag(option)
+                }
+            }
+            .pickerStyle(.segmented)
+            Picker("Color", selection: $palette) {
+                ForEach(Palette.allCases) { option in
                     Text(option.label).tag(option)
                 }
             }
