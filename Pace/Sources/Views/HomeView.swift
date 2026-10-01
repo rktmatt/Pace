@@ -10,6 +10,7 @@ struct HomeView: View {
 
     @State private var sessionForRun: PlannedSession?
     @State private var showingAbout = false
+    @ObservedObject private var quickActions = QuickActionRouter.shared
 
     private var coordinator: ProgramCoordinator { ProgramCoordinator(context: modelContext) }
     private var program: ActiveProgram? { programs.first }
@@ -46,7 +47,11 @@ struct HomeView: View {
             }
         }
         .statusBarScrim()
-        .onAppear(perform: refresh)
+        .onAppear {
+            refresh()
+            startFromQuickAction()
+        }
+        .onChange(of: quickActions.pending) { _, _ in startFromQuickAction() }
         .fullScreenCover(item: $sessionForRun) { session in
             ActiveRunView(session: session)
         }
@@ -61,6 +66,13 @@ struct HomeView: View {
         if let program = coordinator.activeProgram() {
             coordinator.evaluateWeeksIfNeeded(program: program)
         }
+    }
+
+    /// "Start week N" quick action: same as swiping to start the next session.
+    private func startFromQuickAction() {
+        guard quickActions.pending == .startSession else { return }
+        quickActions.pending = nil
+        if sessionForRun == nil { sessionForRun = todaysSession }
     }
 
     private var header: some View {

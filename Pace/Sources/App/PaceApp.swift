@@ -3,6 +3,9 @@ import SwiftData
 
 @main
 struct PaceApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @Environment(\.scenePhase) private var scenePhase
+
     private let modelContainer: ModelContainer = {
         let schema = Schema([ActiveProgram.self, PlannedSession.self, Run.self, RoutePoint.self, AdaptationRecord.self])
         let configuration = ModelConfiguration("Pace", schema: schema, isStoredInMemoryOnly: false)
@@ -24,6 +27,11 @@ struct PaceApp: App {
                     newValue.apply()
                     newValue.applyIcon()
                 }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background {
+                QuickAction.updateShortcutItems(context: modelContainer.mainContext)
+            }
         }
         .modelContainer(modelContainer)
     }

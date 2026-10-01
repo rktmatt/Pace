@@ -142,6 +142,11 @@ Source lives under `Pace/Sources`, grouped by role rather than by screen:
     rising = more effort, falling = ease off) and played via `AVAudioEngine` on the app's `.playback`
     session, so they work on silent and locked. The session is active only while a cue sounds, then
     deactivated with `.notifyOthersOnDeactivation` so music/podcasts come back — keep that invariant.
+- **`App/`** — `PaceApp` (model container, appearance) and `QuickActions.swift`: Home Screen quick actions
+  (long-press the icon). All items are dynamic, rebuilt on background so "Start week N" (next planned
+  session, subtitle = duration · title) sits above Free run / Plan / History. A scene delegate feeds the
+  picked action to `QuickActionRouter.pending`; `RootView` switches tab, `HomeView`/`FreeRunView` consume it
+  to start the run. Ignored while `ActiveRunView` is up (`isRunInProgress`).
 - **`Views/`** — `RootView` (tab bar: Today / Free run / Plan / History), `FreeRunView` (starts an
   off-plan run/walk session), `HomeView` (today's session, week progress,
   adaptation feedback banner), `ActiveRunView` (full-screen, glanceable: big segment countdown colored by

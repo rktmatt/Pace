@@ -10,6 +10,7 @@ struct FreeRunView: View {
     /// No content depends on separate state here, so a plain Bool is safe for
     /// the cover (unlike the session-driven cover on Home).
     @State private var isRunning = false
+    @ObservedObject private var quickActions = QuickActionRouter.shared
 
     private var freeRuns: [Run] { runs.filter { $0.sessionKind == .free } }
 
@@ -55,9 +56,20 @@ struct FreeRunView: View {
         }
         .statusBarScrim()
         .foregroundStyle(Theme.text)
+        .onAppear(perform: startFromQuickAction)
+        .onChange(of: quickActions.pending) { _, _ in startFromQuickAction() }
         .fullScreenCover(isPresented: $isRunning) {
             ActiveRunView(session: nil)
         }
+    }
+}
+
+private extension FreeRunView {
+    /// "Free run" quick action: same as swiping to start.
+    func startFromQuickAction() {
+        guard quickActions.pending == .freeRun else { return }
+        quickActions.pending = nil
+        isRunning = true
     }
 }
 

@@ -38,6 +38,7 @@ struct ActiveRunView: View {
             }
         }
         .onAppear {
+            QuickActionRouter.shared.isRunInProgress = true
             startedAt = .now
             location.requestAuthorization()
             location.startTracking()
@@ -47,6 +48,7 @@ struct ActiveRunView: View {
             if finished { finish() }
         }
         .onDisappear {
+            QuickActionRouter.shared.isRunInProgress = false
             runController.stop()
             location.stopTracking()
         }
