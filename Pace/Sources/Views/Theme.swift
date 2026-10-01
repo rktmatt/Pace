@@ -64,6 +64,24 @@ enum Palette: String, CaseIterable, Identifiable {
             }
         }
     }
+
+    /// Alternate icon in the asset catalog (`ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`);
+    /// nil is the primary mint icon.
+    private var iconName: String? {
+        switch self {
+        case .mint: nil
+        case .pink: "AppIconPink"
+        }
+    }
+
+    /// Swaps the home screen icon to match. iOS shows its own confirmation
+    /// alert on every change, so only call it when the name actually differs.
+    @MainActor
+    func applyIcon() {
+        let app = UIApplication.shared
+        guard app.supportsAlternateIcons, app.alternateIconName != iconName else { return }
+        app.setAlternateIconName(iconName)
+    }
 }
 
 struct PaletteTrait: UITraitDefinition {

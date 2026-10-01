@@ -80,7 +80,9 @@ references — any of these is fine, just keep the group structure under `Pace/S
 on-disk folders below.
 
 The app icon is generated, not drawn by hand: `swift scripts/make_app_icon.swift
-Pace/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png`.
+Pace/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png`. The pink palette's alternate icon
+(`AppIconPink`, listed in `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`) comes from the same script with
+`--pink`, output to `AppIconPink.appiconset/AppIcon.png`.
 
 ## Architecture
 

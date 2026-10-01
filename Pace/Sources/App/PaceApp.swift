@@ -20,7 +20,10 @@ struct PaceApp: App {
                     palette.apply()
                 }
                 .onChange(of: appearance) { _, newValue in newValue.apply() }
-                .onChange(of: palette) { _, newValue in newValue.apply() }
+                .onChange(of: palette) { _, newValue in
+                    newValue.apply()
+                    newValue.applyIcon()
+                }
         }
         .modelContainer(modelContainer)
     }
