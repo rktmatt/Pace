@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 /// About sheet: what the app stands for, where the source lives, and an
 /// optional tip jar. Links open in the browser — nothing is tracked.
@@ -12,6 +13,11 @@ struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage(Appearance.storageKey) private var appearance: Appearance = .dark
     @AppStorage(Palette.storageKey) private var palette: Palette = .mint
+    /// Empty = automatic (best installed voice).
+    @AppStorage(SoundCueService.voiceStorageKey) private var voiceID = ""
+    @State private var voices = SoundCueService.availableVoices()
+    /// Created on first preview, so opening About doesn't touch the audio session.
+    @State private var previewCues: SoundCueService?
 
     private var version: String {
         let info = Bundle.main.infoDictionary
@@ -29,6 +35,7 @@ struct AboutView: View {
                     header
                     principles
                     appearancePicker
+                    voicePicker
                     VStack(spacing: 12) {
                         linkRow(
                             title: "Source code",
@@ -53,6 +60,10 @@ struct AboutView: View {
             }
         }
         .foregroundStyle(Theme.text)
+        // Voices downloaded in Settings show up without reopening the sheet.
+        .onReceive(NotificationCenter.default.publisher(for: AVSpeechSynthesizer.availableVoicesDidChangeNotification)) { _ in
+            voices = SoundCueService.availableVoices()
+        }
     }
 
     private var header: some View {
@@ -112,6 +123,80 @@ struct AboutView: View {
         }
         .padding(20)
         .background(Theme.card, in: RoundedRectangle(cornerRadius: 22))
+    }
+
+    private var voicePicker: some View {
+        let hasNaturalVoice = voices.contains { $0.quality != .default }
+        return VStack(alignment: .leading, spacing: 12) {
+            Label("Voice", systemImage: "waveform")
+                .font(.headline.weight(.bold))
+            VStack(spacing: 0) {
+                voiceRow(
+                    title: "Automatic",
+                    detail: voices.first.map { "Best installed · \($0.name)" } ?? "System voice",
+                    isSelected: voiceID.isEmpty || !voices.contains { $0.identifier == voiceID }
+                ) {
+                    voiceID = ""
+                    preview(voices.first)
+                }
+                ForEach(voices, id: \.identifier) { voice in
+                    Divider().overlay(Theme.secondaryText.opacity(0.2))
+                    voiceRow(title: voice.name, detail: Self.voiceDetail(voice), isSelected: voice.identifier == voiceID) {
+                        voiceID = voice.identifier
+                        preview(voice)
+                    }
+                }
+            }
+            Text(hasNaturalVoice
+                 ? "Tap a voice to hear it. More voices: Settings → Accessibility → Read & Speak → Voices."
+                 : "Only basic voices are installed, which sound robotic. For a natural voice, download a Premium or Enhanced one in Settings → Accessibility → Read & Speak → Voices. It appears here once downloaded.")
+                .font(.footnote)
+                .foregroundStyle(hasNaturalVoice ? Theme.secondaryText : Theme.text.opacity(0.85))
+        }
+        .padding(20)
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: 22))
+    }
+
+    private func voiceRow(title: String, detail: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title).font(.subheadline.weight(.bold))
+                    Text(detail)
+                        .font(.footnote)
+                        .foregroundStyle(Theme.secondaryText)
+                }
+                Spacer()
+                if isSelected {
+                    Image(systemName: "checkmark")
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(Theme.accent)
+                }
+            }
+            .padding(.vertical, 10)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    private func preview(_ voice: AVSpeechSynthesisVoice?) {
+        guard let voice else { return }
+        let cues = previewCues ?? SoundCueService()
+        previewCues = cues
+        cues.preview(voice)
+    }
+
+    private static func voiceDetail(_ voice: AVSpeechSynthesisVoice) -> String {
+        let quality: String
+        switch voice.quality {
+        case .premium: quality = "Premium"
+        case .enhanced: quality = "Enhanced"
+        default: quality = "Basic"
+        }
+        let region = voice.language.split(separator: "-").last
+            .flatMap { Locale.current.localizedString(forRegionCode: String($0)) }
+        return [quality, region].compactMap { $0 }.joined(separator: " · ")
     }
 
     private func principle(_ systemImage: String, _ title: String, _ detail: String) -> some View {

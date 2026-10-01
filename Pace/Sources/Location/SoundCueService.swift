@@ -16,9 +16,7 @@ import AVFoundation
 @MainActor
 final class SoundCueService: NSObject, RunCueing {
     private let synthesizer = AVSpeechSynthesizer()
-    /// Cue text is written in the app's UI language, so the voice must match it —
-    /// not the device's system language, which would read English with a foreign accent.
-    private let voice = SoundCueService.bestVoice(for: Bundle.main.preferredLocalizations.first ?? "en")
+    private var voice = SoundCueService.chosenVoice()
     private let engine = AVAudioEngine()
     private let player = AVAudioPlayerNode()
     private let tones: [Tone: AVAudioPCMBuffer]
@@ -91,6 +89,13 @@ final class SoundCueService: NSObject, RunCueing {
             text += " \(Self.durationPhrase(runningSeconds)) of running today."
         }
         play(.complete, thenSay: text)
+    }
+
+    /// Settings preview: the same tone and wording a real switch uses, so the
+    /// runner hears the voice as it will sound mid-run.
+    func preview(_ voice: AVSpeechSynthesisVoice) {
+        self.voice = voice
+        play(.run, thenSay: "Run for 5 minutes. Halfway there, 10 minutes to go.")
     }
 
     // MARK: - Playback
@@ -169,9 +174,31 @@ final class SoundCueService: NSObject, RunCueing {
         }
     }
 
-    /// Highest-quality installed voice for the language, preferring the user's
-    /// own region variant (e.g. en-GB) when one exists, then en-US-style defaults.
-    private static func bestVoice(for languageCode: String) -> AVSpeechSynthesisVoice? {
+    // MARK: - Voice
+
+    /// `UserDefaults` key for the voice picked in settings; absent = automatic.
+    /// The Watch never sets it (its voices differ), so it always runs automatic.
+    static let voiceStorageKey = "cueVoiceIdentifier"
+
+    /// Cue text is written in the app's UI language, so the voice must match it —
+    /// not the device's system language, which would read English with a foreign accent.
+    static var cueLanguage: String { Bundle.main.preferredLocalizations.first ?? "en" }
+
+    /// The voice picked in settings if it is still installed, else the best one.
+    static func chosenVoice() -> AVSpeechSynthesisVoice? {
+        if let id = UserDefaults.standard.string(forKey: voiceStorageKey),
+           let voice = AVSpeechSynthesisVoice(identifier: id),
+           voice.language.hasPrefix(cueLanguage) {
+            return voice
+        }
+        return availableVoices().first ?? AVSpeechSynthesisVoice(language: cueLanguage)
+    }
+
+    /// Installed voices for the cue language, best first: highest quality, then
+    /// the user's own region variant (e.g. en-GB), then the language's default
+    /// region, then by name.
+    static func availableVoices() -> [AVSpeechSynthesisVoice] {
+        let languageCode = cueLanguage
         let candidates = AVSpeechSynthesisVoice.speechVoices().filter { $0.language.hasPrefix(languageCode) && !$0.voiceTraits.contains(.isNoveltyVoice) }
         let userRegion = "\(languageCode)-\(Locale.current.region?.identifier ?? "")"
         let defaultRegion = AVSpeechSynthesisVoice(language: languageCode)?.language
@@ -179,7 +206,10 @@ final class SoundCueService: NSObject, RunCueing {
             let region = voice.language == userRegion ? 2 : (voice.language == defaultRegion ? 1 : 0)
             return (voice.quality.rawValue, region)
         }
-        return candidates.max { rank($0) < rank($1) } ?? AVSpeechSynthesisVoice(language: languageCode)
+        return candidates.sorted { a, b in
+            let ra = rank(a), rb = rank(b)
+            return ra != rb ? ra > rb : a.name < b.name
+        }
     }
 }
 
