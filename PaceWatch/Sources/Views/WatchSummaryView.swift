@@ -28,11 +28,15 @@ struct WatchSummaryView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
 
-                Button("Done", action: done)
-                    .buttonStyle(.borderedProminent)
-                    .foregroundStyle(.black)
-                    .padding(.top, 4)
+                Button(action: done) {
+                    Text("Done").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .foregroundStyle(.black)
+                .padding(.top, 4)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 10)
         }
     }
 

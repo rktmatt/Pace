@@ -2,7 +2,8 @@ import SwiftUI
 
 /// The run on the wrist: the segment countdown in the interval's color, felt
 /// through haptics at every switch. Swipe right for pause / end. Same engine as
-/// the phone (`RunSessionController`, `LocationTracker`); the finished run is
+/// the phone (`RunSessionController`, `LocationTracker`, `SoundCueService`
+/// alongside haptics); the finished run is
 /// sent to the phone, which records it and adapts the plan.
 struct WatchRunView: View {
     let session: WatchSession?
@@ -22,7 +23,7 @@ struct WatchRunView: View {
     init(session: WatchSession?, palette: String) {
         self.session = session
         self.palette = palette
-        let cues = HapticCueService()
+        let cues = CombinedCues.forWatch()
         _runController = StateObject(wrappedValue: session.map { RunSessionController(intervals: $0.intervals, cues: cues) } ?? RunSessionController(freeRunStartingWith: .walk, cues: cues))
     }
 
@@ -143,7 +144,7 @@ struct WatchRunView: View {
                     .animation(.snappy, value: workout.heartRate)
             }
         }
-        .padding(.horizontal, 4)
+        .padding(.horizontal, 8)
         .containerBackground(for: .tabView) { glow }
     }
 

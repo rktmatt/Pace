@@ -161,8 +161,9 @@ Source lives under `Pace/Sources`, grouped by role rather than by screen:
   a standalone runner: `WatchHomeView` (next session + free run), `WatchRunView` (countdown, haptic cues,
   swipe for pause/end), `WatchSummaryView`. It compiles the shared engine files directly:
   `ProgramDefinition`, `RunRecording` (`RecordedSegment`, `RouteSample`), `RunSessionController`,
-  `LocationTracker`, `Format`, `WatchPayloads` — keep those free of UIKit/SwiftData. Cues go through the
-  `RunCueing` protocol (`SoundCueService` on iPhone, `HapticCueService` on Watch). `WorkoutManager` runs
+  `LocationTracker`, `SoundCueService`, `Format`, `WatchPayloads` — keep those free of UIKit/SwiftData. Cues go
+  through the `RunCueing` protocol: `SoundCueService` on iPhone; on Watch `CombinedCues` = `HapticCueService`
+  plus the same `SoundCueService` tones/speech (speaker or AirPods), toggled by "Voice cues" on Watch Home. `WorkoutManager` runs
   an `HKWorkoutSession` to stay alive wrist-down and read heart rate (stored as `Run.averageHeartRate`/
   `maxHeartRate`); the workout is discarded, never saved to Health. `WatchSyncStore` keeps finished runs in
   an on-disk outbox until the transfer is confirmed.

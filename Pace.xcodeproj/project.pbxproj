@@ -29,6 +29,7 @@
 		3BAEF4551979260FE572E556 /* RunSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E4F3F74593E2EBA4FA7E1C /* RunSessionController.swift */; };
 		3EBB8A06ACD6D28C32A80BAC /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2E85B68B2BF76A259D53FF /* HomeView.swift */; };
 		4830896CAA3B9167AE5E3865 /* AdaptationApplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AAC2EDAFF4CB13F6CB63FE /* AdaptationApplier.swift */; };
+		526CFC3EDADD81FE777F7CEA /* SoundCueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032EDCC6FD919BAE41790261 /* SoundCueService.swift */; };
 		59F23233143B23A9EA85D50B /* WatchHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FA13A6FAE0E8ECDA671CCE /* WatchHomeView.swift */; };
 		60097594053440BEF0222240 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561B2B1803F05259611CC5B /* HistoryView.swift */; };
 		6B43D5C3DBF4A3385006AA55 /* SwipeToStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EDB2315DB3F6CC0438B118 /* SwipeToStartView.swift */; };
@@ -39,6 +40,7 @@
 		7A930EA85B8BFC07F3651523 /* HapticCueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B0A50E21FA0EB1419119E /* HapticCueService.swift */; };
 		832FC637351FE176E5144C8F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3081CAD56835BB5548D45331 /* Foundation.framework */; };
 		867F80DD133042C24AFE06F2 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7BECE29CAA17D73F2335D8 /* WorkoutManager.swift */; };
+		892AF3FB5FAD496F7147F85E /* CombinedCues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147010E84605EE83A980597D /* CombinedCues.swift */; };
 		95CC544CA6F47C7B14BC7657 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3081CAD56835BB5548D45331 /* Foundation.framework */; };
 		A29BA6CC444AD282DFFAC651 /* PaceWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 69914085A7230D67D050F414 /* PaceWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AD24322B22FAD553F2F1477D /* WatchTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FD90B8BF8E2C07EFC9C37C /* WatchTheme.swift */; };
@@ -95,6 +97,7 @@
 		032EDCC6FD919BAE41790261 /* SoundCueService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundCueService.swift; sourceTree = "<group>"; };
 		04094996109AF32982E61C16 /* WatchSyncStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchSyncStore.swift; sourceTree = "<group>"; };
 		09AD92B2086599C302D646BE /* PaceApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaceApp.swift; sourceTree = "<group>"; };
+		147010E84605EE83A980597D /* CombinedCues.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CombinedCues.swift; sourceTree = "<group>"; };
 		256A651DF4072E31501C3252 /* TrainingAnalyzer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrainingAnalyzer.swift; sourceTree = "<group>"; };
 		27893B4F16A72D0E16E42B5C /* WatchRunView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchRunView.swift; sourceTree = "<group>"; };
 		284C2DA1DDB689E5D216FF24 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -390,6 +393,7 @@
 			children = (
 				4C6B0A50E21FA0EB1419119E /* HapticCueService.swift */,
 				FE7BECE29CAA17D73F2335D8 /* WorkoutManager.swift */,
+				147010E84605EE83A980597D /* CombinedCues.swift */,
 			);
 			name = Run;
 			path = Run;
@@ -588,6 +592,8 @@
 				B015074DFE6A2BF8BC00E2BB /* WatchRunView.swift in Sources */,
 				74663F2CCFA791E80BF2C47B /* WatchSummaryView.swift in Sources */,
 				AD24322B22FAD553F2F1477D /* WatchTheme.swift in Sources */,
+				526CFC3EDADD81FE777F7CEA /* SoundCueService.swift in Sources */,
+				892AF3FB5FAD496F7147F85E /* CombinedCues.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

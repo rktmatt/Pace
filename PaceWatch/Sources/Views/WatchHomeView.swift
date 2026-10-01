@@ -4,6 +4,7 @@ import SwiftUI
 struct WatchHomeView: View {
     @EnvironmentObject private var sync: WatchSyncStore
     @State private var request: RunRequest?
+    @AppStorage(CombinedCues.voiceCuesKey) private var voiceCues = true
 
     var body: some View {
         NavigationStack {
@@ -26,6 +27,7 @@ struct WatchHomeView: View {
                     } label: {
                         Label("Free run", systemImage: "stopwatch")
                             .font(.system(.body, design: .rounded).weight(.bold))
+                            .frame(maxWidth: .infinity)
                     }
 
                     if sync.upcoming.count > 1 {
@@ -38,6 +40,12 @@ struct WatchHomeView: View {
                         }
                     }
 
+                    Toggle(isOn: $voiceCues) {
+                        Label("Voice cues", systemImage: "speaker.wave.2.fill")
+                            .font(.footnote.weight(.semibold))
+                    }
+                    .padding(.top, 6)
+
                     if sync.pendingRunCount > 0 {
                         Label(sync.pendingRunCount == 1 ? "1 run waiting for your iPhone" : "\(sync.pendingRunCount) runs waiting for your iPhone", systemImage: "iphone.radiowaves.left.and.right")
                             .font(.footnote)
@@ -45,6 +53,9 @@ struct WatchHomeView: View {
                             .padding(.top, 6)
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                // Clear of the rounded corners: text never runs into the curve.
+                .padding(.horizontal, 10)
             }
             .navigationTitle("Pace")
         }
@@ -85,7 +96,7 @@ private struct NextSessionCard: View {
                     .padding(.top, 2)
             }
             Button(action: start) {
-                Text("START")
+                Label("START", systemImage: "figure.run")
                     .font(.system(.body, design: .rounded).weight(.black))
                     .frame(maxWidth: .infinity)
             }
