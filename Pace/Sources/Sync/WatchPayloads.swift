@@ -10,6 +10,9 @@ import Foundation
 enum WatchSync {
     static let scheduleKey = "schedule"
     static let runMetadataKey = "run"
+    /// Message the Watch sends on launch to ask for the plan when the phone is
+    /// reachable; the reply carries the schedule under `scheduleKey`.
+    static let requestScheduleKey = "requestSchedule"
     /// Upcoming sessions sent to the Watch: enough for a week or two without
     /// the phone, small enough to stay well under the context size limit.
     static let upcomingSessionLimit = 6

@@ -83,8 +83,21 @@ final class WatchSyncStore: NSObject, ObservableObject {
         pendingRunCount = outboxFiles().count
     }
 
+    /// Asks the phone for the plan when it's reachable (both apps running).
+    /// Otherwise the application context brings it once the phone app runs.
+    func requestSchedule() {
+        let session = WCSession.default
+        guard session.activationState == .activated, session.isReachable else { return }
+        session.sendMessage([WatchSync.requestScheduleKey: true], replyHandler: { reply in
+            let data = reply[WatchSync.scheduleKey] as? Data
+            Task { @MainActor in self.apply(contextData: data) }
+        }, errorHandler: nil)
+    }
+
     private func apply(contextData data: Data?) {
         guard let data, let schedule = try? WatchSync.decoder.decode(WatchSchedule.self, from: data) else { return }
+        // Context and replies can arrive out of order: keep the newest.
+        if let current = self.schedule, current.generatedAt > schedule.generatedAt { return }
         self.schedule = schedule
         // A session the phone no longer lists as planned has been recorded
         // there; only those still listed need remembering here.
@@ -108,7 +121,12 @@ extension WatchSyncStore: WCSessionDelegate {
         Task { @MainActor in
             self.apply(contextData: data)
             self.flushOutbox()
+            self.requestSchedule()
         }
+    }
+
+    nonisolated func sessionReachabilityDidChange(_ session: WCSession) {
+        Task { @MainActor in self.requestSchedule() }
     }
 
     nonisolated func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {

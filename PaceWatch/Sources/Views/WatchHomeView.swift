@@ -15,7 +15,7 @@ struct WatchHomeView: View {
                         }
                     } else {
                         Text(sync.schedule == nil
-                             ? "Open Pace on your iPhone to bring your plan here."
+                             ? "Your plan isn't on this Watch yet. Open Pace on the iPhone paired with it."
                              : "No planned sessions left. A free run still counts.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
